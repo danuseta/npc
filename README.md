@@ -109,45 +109,6 @@ Client will run on: `http://localhost:3000`
 - **Password**: `admin123`
 - **Access**: Full system administration
 
-## 🔑 Environment Variables
-
-### Server (.env)
-```env
-# Database
-DB_HOST=localhost
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
-DB_NAME=npc
-DB_PORT=3306
-
-# JWT
-JWT_SECRET=your_jwt_secret_key
-
-# API Keys
-BINDERBYTE_API_KEY=your_binderbyte_api_key
-BITESHIP_API_KEY=your_biteship_api_key
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-MIDTRANS_SERVER_KEY=your_midtrans_server_key
-MIDTRANS_CLIENT_KEY=your_midtrans_client_key
-
-# Server
-PORT=5000
-NODE_ENV=development
-```
-
-### Client (.env)
-```env
-# API URL
-REACT_APP_API_URL=http://localhost:5000/api
-
-# Midtrans
-REACT_APP_MIDTRANS_CLIENT_KEY=your_midtrans_client_key
-
-# Environment
-REACT_APP_ENV=development
-```
 
 ## 🚀 Quick Start
 
@@ -191,28 +152,6 @@ REACT_APP_ENV=development
 - Sales analytics
 - Shipping management
 
-<!-- ## 🔄 API Endpoints
-
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/logout` - User logout
-
-### Orders
-- `GET /api/orders` - Get user orders
-- `POST /api/orders` - Create new order
-- `PUT /api/orders/:id` - Update order status
-- `GET /api/orders/:id` - Get order details
-
-### Products
-- `GET /api/products` - Get products list
-- `GET /api/products/:id` - Get product details
-- `POST /api/products` - Create product (Admin)
-- `PUT /api/products/:id` - Update product (Admin)
-
-### Shipping
-- `GET /api/shipping/rates` - Calculate shipping rates
-- `GET /api/shipping/track/:trackingNumber` - Track package -->
 
 ## 📄 Documentation
 
