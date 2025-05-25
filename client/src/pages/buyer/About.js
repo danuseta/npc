@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
@@ -38,6 +38,41 @@ const founders = [
   }
 ];
 
+const LazyImage = ({ src, alt, className, onError, ...props }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  const handleLoad = useCallback(() => {
+    setLoaded(true);
+  }, []);
+
+  const handleError = useCallback((e) => {
+    setError(true);
+    if (onError) onError(e);
+  }, [onError]);
+
+  return (
+    <div className="relative">
+      {!loaded && !error && (
+        <div className={`absolute inset-0 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center ${className}`}>
+          <div className="text-gray-400">
+            <i className="fas fa-image text-2xl"></i>
+          </div>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={handleLoad}
+        onError={handleError}
+        loading="lazy"
+        {...props}
+      />
+    </div>
+  );
+};
+
 const About = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-6 sm:pt-8 md:pt-10">
@@ -50,7 +85,7 @@ const About = () => {
         <div className="w-full mb-6 sm:mb-10 bg-gradient-to-r from-npc-navy via-npc-brown to-npc-gold rounded-lg sm:rounded-2xl overflow-hidden shadow-lg">
           <div className="flex flex-col lg:flex-row items-center">
             <div className="order-1 lg:order-2 p-5 sm:p-6 lg:w-1/2 flex justify-center">
-              <img 
+              <LazyImage 
                 src="./komponen.png" 
                 alt="PC Components" 
                 className="max-w-full h-auto rounded-lg"
@@ -119,7 +154,7 @@ const About = () => {
               <div key={founder.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden">
                 <div className="p-4 flex justify-center">
                   <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden">
-                    <img 
+                    <LazyImage 
                       src={founder.image} 
                       alt={founder.name} 
                       className="w-full h-full object-cover"
@@ -178,8 +213,15 @@ const About = () => {
 
         <div className="mb-6">
           <div className="bg-gradient-to-r from-npc-gold to-npc-brown rounded-lg sm:rounded-2xl p-5 sm:p-6 md:p-8 text-center shadow-lg">
-                        <h2 className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 md:mb-4">              Explore Our E-Business Project            </h2>            <p className="text-white/90 mb-3 sm:mb-4 md:mb-6 max-w-lg mx-auto text-xs sm:text-sm md:text-base">              Discover how we've implemented modern e-commerce features and digital business strategies in our Informatics Engineering final project at UNILA.            </p>
-                        <Link to="/products" className="inline-block bg-white hover:bg-gray-100 text-npc-navy font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-full transition-colors shadow-md"            >              Explore Our Project            </Link>
+            <h2 className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 md:mb-4">
+              Explore Our E-Business Project
+            </h2>
+            <p className="text-white/90 mb-3 sm:mb-4 md:mb-6 max-w-lg mx-auto text-xs sm:text-sm md:text-base">
+              Discover how we've implemented modern e-commerce features and digital business strategies in our Informatics Engineering final project at UNILA.
+            </p>
+            <Link to="/products" className="inline-block bg-white hover:bg-gray-100 text-npc-navy font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-full transition-colors shadow-md">
+              Explore Our Project
+            </Link>
           </div>
         </div>
       </main>

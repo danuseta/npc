@@ -787,21 +787,50 @@ const OrderHistory = () => {
         <InvoiceTemplate order={order} storeInfo={storeInfo} />
       ).toBlob();
       
-      const url = URL.createObjectURL(blob);
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `invoice-${order.orderNumber}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      URL.revokeObjectURL(url);
+      if (isMobile) {
+        const url = URL.createObjectURL(blob);
+        const newWindow = window.open(url, '_blank');
+        
+        if (!newWindow) {
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `invoice-${order.orderNumber}.pdf`;
+          link.target = '_blank';
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          
+          const clickEvent = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          });
+          link.dispatchEvent(clickEvent);
+          
+          document.body.removeChild(link);
+        }
+        
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+        }, 3000);
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `invoice-${order.orderNumber}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
       
       window.Swal?.close();
       window.Swal?.fire({
-        title: 'Invoice Downloaded',
-        text: `Invoice for order ${order.orderNumber} has been downloaded.`,
+        title: isMobile ? 'Invoice Generated' : 'Invoice Downloaded',
+        text: isMobile 
+          ? `Invoice for order ${order.orderNumber} has been opened in a new tab.`
+          : `Invoice for order ${order.orderNumber} has been downloaded.`,
         icon: 'success',
         toast: true,
         position: 'top-end',

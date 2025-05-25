@@ -14,6 +14,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "@vercel/analytics": "^1.5.0",
     "api-wilayah-indonesia": "^1.0.8",
     "autoprefixer": "^10.4.21",
     "axios": "^1.8.4",

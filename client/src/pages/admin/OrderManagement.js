@@ -1582,13 +1582,16 @@ const OrderManagement = () => {
           title="Invoice Preview"
           size="xl"
           className="max-w-full overflow-hidden"
+          showCloseButton={false}
         >
           <div className="flex flex-col h-full">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Order Invoice #{printingOrder.orderNumber}</h3>
-              <div className="space-x-2">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-3 sm:space-y-0">
+              <h3 className="text-base sm:text-lg font-medium text-gray-600 text-center sm:text-left">
+                Order Invoice #{printingOrder.orderNumber}
+              </h3>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
-                  className="btn btn-primary bg-npc-gold hover:bg-npc-darkGold border-none"
+                  className="btn btn-primary bg-npc-gold hover:bg-npc-darkGold border-none text-sm sm:text-base w-full sm:w-auto"
                   onClick={async () => {
                     try {
                       window.Swal.fire({
@@ -1604,17 +1607,47 @@ const OrderManagement = () => {
                         <InvoiceTemplate order={printingOrder} storeInfo={storeInfo} />
                       ).toBlob();
                       
-                      const url = URL.createObjectURL(blob);
-                      const link = document.createElement('a');
-                      link.href = url;
-                      link.download = `Invoice-${printingOrder.orderNumber}.pdf`;
-                      link.click();
+                      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                       
-                      URL.revokeObjectURL(url);
+                      if (isMobile) {
+                        const url = URL.createObjectURL(blob);
+                        const newWindow = window.open(url, '_blank');
+                        
+                        if (!newWindow) {
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.download = `Invoice-${printingOrder.orderNumber}.pdf`;
+                          link.target = '_blank';
+                          link.style.display = 'none';
+                          document.body.appendChild(link);
+                          
+                          const clickEvent = new MouseEvent('click', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true
+                          });
+                          link.dispatchEvent(clickEvent);
+                          
+                          document.body.removeChild(link);
+                        }
+                        
+                        setTimeout(() => {
+                          URL.revokeObjectURL(url);
+                        }, 3000);
+                      } else {
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `Invoice-${printingOrder.orderNumber}.pdf`;
+                        link.click();
+                        URL.revokeObjectURL(url);
+                      }
                       
                       window.Swal.fire({
                         title: 'Success',
-                        text: 'Invoice has been downloaded',
+                        text: isMobile 
+                          ? 'Invoice opened in new tab' 
+                          : 'Invoice has been downloaded',
                         icon: 'success',
                         timer: 2000,
                         showConfirmButton: false,
@@ -1631,34 +1664,38 @@ const OrderManagement = () => {
                     }
                   }}
                 >
-                  <i className="fas fa-download mr-2"></i>
-                  Download PDF
+                  <i className="fas fa-download mr-1 sm:mr-2"></i>
+                  <span className="hidden sm:inline">Download PDF</span>
+                  <span className="sm:hidden">Download</span>
                 </button>
                 
                 <button 
-                  className="btn btn-ghost"
+                  className="btn btn-ghost text-gray-600 hover:text-white text-sm sm:text-base w-full sm:w-auto"
                   onClick={() => setIsPrintModalOpen(false)}
                 >
+                  <i className="fas fa-times mr-1 sm:mr-2"></i>
                   Close
                 </button>
               </div>
             </div>
             
-            <div className="flex-grow bg-gray-100 p-2 rounded-md overflow-auto" style={{ height: '75vh' }}>
+            <div className="flex-grow bg-gray-100 p-1 sm:p-2 rounded-md overflow-auto" style={{ height: '60vh', minHeight: '400px' }}>
               {printingOrder.items && Array.isArray(printingOrder.items) && printingOrder.items.length > 0 ? (
-                <PDFViewer width="100%" height="100%" className="border-0">
-                  <InvoiceTemplate order={printingOrder} storeInfo={storeInfo} />
-                </PDFViewer>
+                <div className="w-full h-full">
+                  <PDFViewer width="100%" height="100%" className="border-0 rounded">
+                    <InvoiceTemplate order={printingOrder} storeInfo={storeInfo} />
+                  </PDFViewer>
+                </div>
               ) : (
                 <div className="flex justify-center items-center h-full">
-                  <div className="text-center p-8 bg-white rounded-lg shadow">
-                    <i className="fas fa-exclamation-circle text-yellow-500 text-4xl mb-4"></i>
-                    <h3 className="text-lg font-medium mb-2">No Item Data Available</h3>
-                    <p className="text-gray-600 mb-4">
+                  <div className="text-center p-4 sm:p-8 bg-white rounded-lg shadow">
+                    <i className="fas fa-exclamation-circle text-yellow-500 text-2xl sm:text-4xl mb-2 sm:mb-4"></i>
+                    <h3 className="text-base sm:text-lg font-medium mb-2 text-gray-600">No Item Data Available</h3>
+                    <p className="text-gray-500 mb-4 text-sm sm:text-base">
                       The order items data could not be loaded properly. Please try again or contact support.
                     </p>
-                    <div>
-                      <pre className="text-xs text-left bg-gray-100 p-2 rounded overflow-auto max-h-32">
+                    <div className="hidden sm:block">
+                      <pre className="text-xs text-left bg-gray-100 p-2 rounded overflow-auto max-h-32 text-gray-600">
                         {JSON.stringify(printingOrder, null, 2)}
                       </pre>
                     </div>

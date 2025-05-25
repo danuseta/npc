@@ -123,7 +123,7 @@ const Carousel = ({
         ))}
         
         {showArrows && totalSlides > 1 && (
-          <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2 z-40">
+          <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2 z-30">
             <button 
               className={arrowPrevClass} 
               onClick={prevSlide}

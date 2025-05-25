@@ -7,13 +7,14 @@ const uploadMiddleware = require('../middlewares/uploadMiddleware');
 
 router.use(protect);
 
+// Stats route must come before /:id route to avoid conflicts
+router.get('/stats', authorize('admin', 'superadmin'), userController.getUserStats);
+router.get('/', authorize('admin', 'superadmin'), userController.getAllUsers);
+
 router.get('/:id', restrictTo('buyer', 'admin', 'superadmin'), userController.getUserById);
 router.put('/profile', restrictTo('buyer', 'admin', 'superadmin'), uploadMiddleware.profileImage, userController.updateProfile);
 router.put('/address', restrictTo('buyer', 'admin', 'superadmin'), userController.updateAddress);
 router.put('/:id', restrictTo('buyer', 'admin', 'superadmin'), userController.updateUserGeneral);
-
-router.get('/', authorize('admin', 'superadmin'), userController.getAllUsers);
-router.get('/stats', authorize('admin', 'superadmin'), userController.getUserStats);
 
 router.put(
   '/:id/status', 
@@ -32,7 +33,5 @@ router.delete(
   authorize('superadmin'), 
   userController.deleteUser
 );
-
-router.put('/:id', userController.updateUserGeneral);
 
 module.exports = router;

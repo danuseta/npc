@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { CartProvider } from './contexts/CartContext';
 import ResponsiveLayout from './layouts/ResponsiveLayout';
+import { Analytics } from '@vercel/analytics/react';
 
 import Home from './pages/buyer/Home';
 import ProductList from './pages/buyer/ProductList';
@@ -68,6 +69,7 @@ function App() {
 
   return (
     <CartProvider>
+      <Analytics />
       <Routes>
         <Route path="/" element={<ResponsiveLayout><Home /></ResponsiveLayout>} />
         <Route path="/products" element={<ResponsiveLayout><ProductList /></ResponsiveLayout>} />
