@@ -93,10 +93,6 @@ const CategoryForm = ({ category, categories, onSubmit, onClose }) => {
         categoryFormData.append('categoryImage', formData.imageUrl);
       }
       
-      console.log('Form Data contents:');
-      for (let [key, value] of categoryFormData.entries()) {
-        console.log(`${key}: ${value instanceof File ? value.name : value}`);
-      }
       
       await onSubmit(categoryFormData);
     } catch (error) {

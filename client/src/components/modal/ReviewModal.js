@@ -74,11 +74,7 @@ const ReviewModal = ({ item, orderId, isOpen, onClose, onSubmitSuccess }) => {
         isRecommended: formData.isRecommended
       };
 
-      console.log('Submitting review:', reviewData);
-
       const response = await reviewAPI.createReview(reviewData);
-
-      console.log('Review submission response:', response);
 
       if (response.data && response.data.success) {
         if (onSubmitSuccess) {

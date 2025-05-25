@@ -117,11 +117,11 @@ const Sidebar = ({ isSuperAdmin }) => {
           isSidebarOpen ? 'w-64' : 'w-0 lg:w-64 overflow-hidden'
         }`}
       >
-        {!isSidebarOpen && (
+        {/* {!isSidebarOpen && (
           <div className="hidden lg:flex justify-center items-center mt-2 mb-6">
             <img src={Logo} alt="NPC Logo" className="h-10" />
           </div>
-        )}
+        )} */}
         
         <div className={`px-6 py-5 border-b border-gray-700 ${!isSidebarOpen && 'lg:px-6 lg:py-5'}`}>
           <div className="flex items-center">

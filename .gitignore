@@ -41,5 +41,7 @@ test_binderbyte_tracking.js
 
 
 
-
+/server/testing
 /server/.zip
+
+schema.sql

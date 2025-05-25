@@ -2,14 +2,15 @@ const axios = require('axios');
 const db = require('../models');
 const env = require('../utils/env');
 
-const BITESHIP_API_KEY = 'biteship_test.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTlBDIFRlc3QiLCJ1c2VySWQiOiI2N2Y5NmRkNTkwMWYyYzAwMTJjOTNiOWYiLCJpYXQiOjE3NDQ0NTEwNDV9.ZzZYlOj_oX3561zpEUv4FLIsdDMtyg_zVoogmqBnTOo';
+const BITESHIP_API_KEY = 'biteship_live.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTlBDIFBST0QiLCJ1c2VySWQiOiI2N2Y5NmRkNTkwMWYyYzAwMTJjOTNiOWYiLCJpYXQiOjE3NDgxNDE5NjZ9.2nFcZ9xeUyuo0MI8Kqs5bKjFkP__44z1vWW9L5yrtVk';
 
 const biteshipAPI = axios.create({
   baseURL: 'https://api.biteship.com/v1',
   headers: {
     'Authorization': `Bearer ${BITESHIP_API_KEY}`,
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 30000
 });
 
 const binderbyteAPI = axios.create({
@@ -18,6 +19,29 @@ const binderbyteAPI = axios.create({
 });
 
 const pendingRequests = {};
+
+biteshipAPI.interceptors.request.use(
+  (config) => {
+    console.log(`[BITESHIP] Request: ${config.method?.toUpperCase()} ${config.url}`);
+    return config;
+  },
+  (error) => {
+    console.error('[BITESHIP] Request Error:', error.message);
+    return Promise.reject(error);
+  }
+);
+
+biteshipAPI.interceptors.response.use(
+  (response) => {
+    console.log(`[BITESHIP] Response: ${response.status} ${response.statusText}`);
+    return response;
+  },
+  (error) => {
+    console.error(`[BITESHIP] Response Error: ${error.response?.status} ${error.response?.statusText}`);
+    console.error(`[BITESHIP] Error Data:`, error.response?.data);
+    return Promise.reject(error);
+  }
+);
 
 const parseDimensions = (dimensionsStr) => {
   if (!dimensionsStr) {
@@ -192,20 +216,34 @@ exports.getProductDetailsForShipping = async (productIds) => {
 
 exports.calculateShippingRates = async (originPostalCode, destinationPostalCode, weight = 1, productIds = []) => {
   try {
+    console.log(`[SHIPPING] Calculating rates: ${originPostalCode} → ${destinationPostalCode}, Weight: ${weight}kg`);
+    
     const requestKey = `${originPostalCode}_${destinationPostalCode}_${weight}_${productIds.join('_')}`;
     if (pendingRequests[requestKey]) {
+      console.log(`[SHIPPING] Using pending request for: ${requestKey}`);
       return await pendingRequests[requestKey];
     }
+    
     pendingRequests[requestKey] = (async () => {
       try {
         const items = await exports.getProductDetailsForShipping(productIds);
-        const response = await biteshipAPI.post('/rates/couriers', {
+        console.log(`[SHIPPING] Prepared ${items.length} items for shipping calculation`);
+        
+        const payload = {
           origin_postal_code: originPostalCode,
           destination_postal_code: destinationPostalCode,
           couriers: "jne,jnt,sicepat,pos,tiki",
           items: items
-        });
-        if (response.data && response.data.pricing && response.data.pricing.length > 0) {
+        };
+        
+        console.log(`[SHIPPING] Biteship API Request:`, JSON.stringify(payload, null, 2));
+        
+        const response = await biteshipAPI.post('/rates/couriers', payload);
+        
+        console.log(`[SHIPPING] Biteship API Response Status: ${response.status}`);
+        console.log(`[SHIPPING] Response Data:`, JSON.stringify(response.data, null, 2));
+        
+        if (response.data && response.data.pricing && Array.isArray(response.data.pricing) && response.data.pricing.length > 0) {
           const shippingOptions = response.data.pricing.map(option => ({
             id: `${option.courier_code}_${option.courier_service_code}`.toLowerCase(),
             name: `${option.courier_name} - ${option.courier_service_name}`,
@@ -214,15 +252,32 @@ exports.calculateShippingRates = async (originPostalCode, destinationPostalCode,
             courier: option.courier_code,
             service: option.courier_service_code
           }));
+          
+          console.log(`[SHIPPING] Successfully calculated ${shippingOptions.length} shipping options`);
           return shippingOptions;
+        } else {
+          console.warn(`[SHIPPING] Biteship API returned no pricing data:`, response.data);
+          throw new Error('No shipping options available for this destination');
         }
-        throw new Error('No shipping options available for this destination');
+      } catch (apiError) {
+        console.error(`[SHIPPING] Biteship API Error:`, {
+          message: apiError.message,
+          status: apiError.response?.status,
+          statusText: apiError.response?.statusText,
+          data: apiError.response?.data,
+          code: apiError.code
+        });
+        
+        const errorMessage = apiError.response?.data?.message || apiError.message || 'Unknown Biteship API error';
+        throw new Error(`Biteship API failed: ${errorMessage}`);
       } finally {
         delete pendingRequests[requestKey];
       }
     })();
+    
     return await pendingRequests[requestKey];
   } catch (error) {
+    console.error(`[SHIPPING] Final Error in calculateShippingRates:`, error.message);
     throw error;
   }
 };

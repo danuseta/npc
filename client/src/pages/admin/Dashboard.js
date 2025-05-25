@@ -59,14 +59,12 @@ const Dashboard = () => {
         const userStatsResponse = await userAPI.getUserStats();
         if (userStatsResponse?.data?.success) {
           const userStats = userStatsResponse.data.data;
-          console.log("User stats:", userStats);
           setStats(prevStats => ({
             ...prevStats,
             totalCustomers: userStats.buyerCount || 0
           }));
         }
       } catch (err) {
-        console.log("Error getting user stats:", err);
       }
       
       const orderStatsResponse = await orderAPI.getOrderStats();
@@ -109,7 +107,6 @@ const Dashboard = () => {
       
       try {
         const popularResponse = await productAPI.getPopularProducts({ limit: 5 });
-        console.log("Popular products response:", popularResponse);
         
         if (popularResponse?.data?.data) {
           setTopProducts(popularResponse.data.data);

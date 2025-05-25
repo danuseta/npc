@@ -2,18 +2,16 @@ const express = require('express');
 const router = express.Router();
 const paymentController = require('../controllers/paymentController');
 const { protect, authorize } = require('../middlewares/authMiddleware');
+const { restrictTo } = require('../middlewares/roleMiddleware');
 
 router.use(protect);
 
-router.post('/', paymentController.createPayment);
-
-router.post('/midtrans', paymentController.createMidtransPayment);
+router.post('/', restrictTo('buyer', 'admin', 'superadmin'), paymentController.createPayment);
+router.post('/midtrans', restrictTo('buyer', 'admin', 'superadmin'), paymentController.createMidtransPayment);
+router.get('/order/:orderId', restrictTo('buyer', 'admin', 'superadmin'), paymentController.getPaymentByOrderId);
+router.post('/midtrans/token', restrictTo('buyer', 'admin', 'superadmin'), paymentController.getSnapToken);
 
 router.post('/callback', paymentController.processPaymentCallback);
-
-router.get('/order/:orderId', paymentController.getPaymentByOrderId);
-
-router.post('/midtrans/token', paymentController.getSnapToken);
 
 router.get(
   '/', 

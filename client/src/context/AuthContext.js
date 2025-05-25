@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const response = await authService.login(email, password);
       
-      console.log('Login response:', response);
       
       if (response.token) {
         localStorage.setItem('token', response.token);
@@ -50,7 +49,6 @@ export const AuthProvider = ({ children }) => {
       const currentUserResponse = await authService.getCurrentUser();
       const userData = currentUserResponse.data || currentUserResponse;
       
-      console.log('Current user data after login:', userData);
       setUser(userData);
       
       Swal.fire({
@@ -80,8 +78,6 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await authService.register(userData);
-      
-      console.log('Register response:', response);
       
       let registeredUser;
       if (response.user) {

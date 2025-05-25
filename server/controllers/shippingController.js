@@ -4,18 +4,21 @@ const requestCache = {};
 const CACHE_LIFETIME = 60000;
 
 exports.getRates = async (req, res) => {
-  console.log('Shipping rate request received:', req.body);
+  console.log('[CONTROLLER] Shipping rate request received:', req.body);
   try {
     const { postalCode, weight = 1, productIds = [] } = req.body;
     const cacheKey = `${postalCode}_${weight}_${Array.isArray(productIds) ? productIds.sort().join('_') : ''}`;
+    
     if (requestCache[cacheKey] && requestCache[cacheKey].expires > Date.now()) {
-      console.log(`Using cached shipping rates for request: ${cacheKey}`);
+      console.log(`[CONTROLLER] Using cached shipping rates for request: ${cacheKey}`);
       return res.status(200).json({
         success: true,
         data: requestCache[cacheKey].data,
-        fromCache: true
+        fromCache: true,
+        source: 'cache'
       });
     }
+    
     if (!postalCode) {
       return res.status(400).json({
         success: false,
@@ -40,31 +43,73 @@ exports.getRates = async (req, res) => {
         message: 'Product IDs must be an array'
       });
     }
+    
+    console.log('[CONTROLLER] Getting store origin postal code...');
     const originPostalCode = await shippingService.getStoreOriginPostalCode();
+    console.log(`[CONTROLLER] Store origin: ${originPostalCode}`);
+    
+    console.log('[CONTROLLER] Calling Biteship API...');
     const shippingOptions = await shippingService.calculateShippingRates(
       originPostalCode,
       postalCode,
       weight,
       productIds
     );
+    
     requestCache[cacheKey] = {
       data: shippingOptions,
       expires: Date.now() + CACHE_LIFETIME
     };
+    
     if (Math.random() < 0.1) {
       cleanupExpiredCache();
     }
+    
+    console.log(`[CONTROLLER] Successfully returned ${shippingOptions.length} shipping options`);
     res.status(200).json({
       success: true,
-      data: shippingOptions
+      data: shippingOptions,
+      source: 'biteship_api',
+      isUsingFallback: false
     });
+    
   } catch (error) {
-    console.error('Error getting shipping rates:', error);
-    const fallbackOptions = shippingService.getFallbackShippingOptions();
-    res.status(200).json({
-      success: true,
-      data: fallbackOptions,
-      isUsingFallback: true,
+    console.error('[CONTROLLER] Error getting shipping rates:', error.message);
+    
+    const isBiteshipDown = error.message.includes('ECONNREFUSED') || 
+                          error.message.includes('ENOTFOUND') ||
+                          error.message.includes('timeout');
+                          
+    const isAuthError = error.message.includes('unauthorized') || 
+                       error.message.includes('forbidden') ||
+                       error.message.includes('401') ||
+                       error.message.includes('403');
+    
+    if (isBiteshipDown) {
+      console.warn('[CONTROLLER] Biteship API appears to be down, using fallback');
+      const fallbackOptions = shippingService.getFallbackShippingOptions();
+      return res.status(200).json({
+        success: true,
+        data: fallbackOptions,
+        isUsingFallback: true,
+        source: 'fallback_network_issue',
+        error: 'Biteship API temporarily unavailable'
+      });
+    }
+    
+    if (isAuthError) {
+      console.error('[CONTROLLER] Biteship API authentication failed');
+      return res.status(500).json({
+        success: false,
+        message: 'Shipping service authentication failed. Please contact support.',
+        error: 'Authentication error with shipping provider'
+      });
+    }
+    
+    console.error('[CONTROLLER] Unexpected shipping error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to calculate shipping rates. Please try again.',
       error: error.message
     });
   }

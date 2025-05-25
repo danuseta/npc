@@ -58,9 +58,7 @@ const ProductDetail = () => {
     setLoading(true);
     
     try {
-      console.log('Fetching product details for ID:', id);
       const productResponse = await productAPI.getProductById(id);
-      console.log('Product response:', productResponse);
       setDebug(prev => ({...prev, productResponse}));
       let productData;
       if (productResponse?.data?.data) {
@@ -71,12 +69,9 @@ const ProductDetail = () => {
         console.error('Unexpected product response format:', productResponse);
         throw new Error('Invalid product data format');
       }
-      console.log('Extracted product data:', productData);
       setProduct(productData);
       try {
-        console.log('Fetching reviews for product ID:', id);
         const reviewsResponse = await reviewAPI.getProductReviews(id, { limit: 5 });
-        console.log('Reviews response:', reviewsResponse);
         setDebug(prev => ({...prev, reviewsResponse}));
         let reviewsData;
         if (reviewsResponse?.data?.data) {
@@ -99,9 +94,7 @@ const ProductDetail = () => {
       }
       if (productData.categoryId) {
         try {
-          console.log('Fetching related products for category ID:', productData.categoryId);
           const relatedResponse = await productAPI.getProductsByCategory(productData.categoryId, { limit: 4 });
-          console.log('Related products response:', relatedResponse);
           setDebug(prev => ({...prev, relatedResponse}));
           let relatedData;
           if (relatedResponse?.data?.data) {
@@ -348,7 +341,6 @@ const ProductDetail = () => {
                       className="max-h-full max-w-full object-contain p-4 cursor-pointer"
                       onClick={toggleImageViewer}
                       onError={(e) => {
-                        console.log('Error loading image, using placeholder');
                         e.target.src = '/images/product-placeholder.png';
                       }}
                     />

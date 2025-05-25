@@ -56,12 +56,9 @@ const UserManagement = () => {
         role: 'buyer'
       };
       
-      console.log("Fetching users with params:", params);
-      
       const response = await userAPI.getAllUsers(params);
       
       if (response.data?.success) {
-        console.log("Users data:", response.data.data);
         setUsers(response.data.data || []);
         setTotalPages(response.data.pagination?.totalPages || 1);
         setTotalCount(response.data.pagination?.totalItems || 0);
@@ -123,7 +120,6 @@ const UserManagement = () => {
       const response = await userAPI.getUserById(userId);
       
       if (response.data?.success) {
-        console.log("User details:", response.data.data);
         setSelectedUser(response.data.data);
         setIsViewModalOpen(true);
       } else {
@@ -239,7 +235,6 @@ const UserManagement = () => {
       
       if (users.length < totalCount) {
         try {
-          console.log('Fetching all users for export...');
           const response = await userAPI.getAllUsers({
             limit: 1000,
             role: 'buyer'
@@ -247,7 +242,6 @@ const UserManagement = () => {
           
           if (response.data?.success && response.data.data?.length > 0) {
             usersToExport = response.data.data;
-            console.log(`Fetched ${usersToExport.length} users for export`);
           }
         } catch (fetchError) {
           console.error('Error fetching all users for export:', fetchError);

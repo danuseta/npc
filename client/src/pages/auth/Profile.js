@@ -30,7 +30,6 @@ const Profile = () => {
   const refreshUserData = async () => {
     try {
       const freshUserData = await authService.getCurrentUser();
-      console.log('Refreshed user data in Profile:', freshUserData);
       
       if (freshUserData) {
         setProfileForm(prev => ({
@@ -127,7 +126,6 @@ const Profile = () => {
   
   useEffect(() => {
     if (user) {
-      console.log('User data in Profile:', user);
       setProfileForm({
         name: user.name || '',
         email: user.email || '',

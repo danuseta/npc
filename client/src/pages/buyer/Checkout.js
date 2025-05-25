@@ -45,7 +45,6 @@ const Checkout = () => {
       script.setAttribute('data-client-key', midtransClientKey);
       script.async = true;
       script.onload = () => {
-        console.log('Snap script loaded successfully');
         setSnapScriptLoaded(true);
       };
       script.onerror = () => {
@@ -136,13 +135,11 @@ const Checkout = () => {
         return;
       }
       
-      console.log("Cart items for shipping:", cartItems);
       
       const productIds = cartItems.map(item => {
         return item.productId || item.id;
       }).filter(id => id);
       
-      console.log("Product IDs being sent to API:", productIds);
       
       const requestId = Date.now();
       
@@ -155,7 +152,6 @@ const Checkout = () => {
       
       if (response.data && response.data.success && response.data.data) {
         setShippingOptions(response.data.data);
-        console.log("Shipping options loaded successfully:", response.data.data.length);
       } else {
         console.error('Invalid shipping API response:', response);
         setShippingOptions([]);
@@ -399,7 +395,6 @@ const Checkout = () => {
       }
       
       const createdOrder = orderResponse.data.data;
-      console.log("Order created successfully:", createdOrder);
       
       const tokenResponse = await paymentAPI.getSnapToken({
         ...orderData,
@@ -412,17 +407,14 @@ const Checkout = () => {
       }
       
       const snapToken = tokenResponse.data.token;
-      console.log("Received snap token:", snapToken);
       
       setSnapPaymentUI(true);
       
       window.snap.pay(snapToken, {
         onSuccess: async function(result) {
-          console.log('Payment success:', result);
           await updateOrderAfterPayment(createdOrder.id, result);
         },
         onPending: function(result) {
-          console.log('Payment pending:', result);
           setIsProcessing(false);
           window.Swal?.fire({
             icon: 'warning',
@@ -478,7 +470,6 @@ const Checkout = () => {
         status: status,
         paymentStatus: status === 'cancelled' ? 'failed' : 'pending'
       });
-      console.log(`Order ${orderId} status updated to ${status}`);
     } catch (error) {
       console.error(`Failed to update order ${orderId} status:`, error);
     }
@@ -491,7 +482,6 @@ const Checkout = () => {
         timestamp: new Date().toISOString()
       }));
       
-      console.log('Payment result:', paymentResult);
       
       await orderAPI.updateOrderStatus(orderId, { 
         status: 'processing',
@@ -500,18 +490,15 @@ const Checkout = () => {
         paymentMethod: formatPaymentMethodForBackend(paymentResult.payment_type)
       });
       
-      console.log("Order status successfully updated to 'processing' with payment status 'paid'");
       
       try {
         let purchasedProductIds = [];
         
         try {
-          console.log(`Getting order details for ID: ${orderId}`);
           const orderResponse = await orderAPI.getOrderById(orderId);
           
           if (orderResponse?.data?.data?.OrderItems) {
             purchasedProductIds = orderResponse.data.data.OrderItems.map(item => item.productId);
-            console.log(`Product IDs from order: ${JSON.stringify(purchasedProductIds)}`);
           } else {
             console.log('No OrderItems in API response');
           }
@@ -522,14 +509,12 @@ const Checkout = () => {
             console.log('Using checkout data from localStorage as fallback');
             const checkoutItems = JSON.parse(localStorage.getItem('checkoutItems') || '[]');
             purchasedProductIds = checkoutItems.map(item => item.productId || item.id).filter(Boolean);
-            console.log(`Product IDs from localStorage: ${JSON.stringify(purchasedProductIds)}`);
           } catch (parseError) {
             console.error(`Error parsing localStorage data: ${parseError.message}`);
           }
         }
         
         if (purchasedProductIds.length > 0) {
-          console.log(`Removing ${purchasedProductIds.length} items from cart`);
           await cartAPI.clearCart(purchasedProductIds);
           console.log("Purchased items successfully removed from cart");
         } else {
@@ -545,9 +530,7 @@ const Checkout = () => {
           const itemIds = checkoutItems.map(item => item.productId || item.id).filter(Boolean);
           
           if (itemIds.length > 0) {
-            console.log(`Trying to remove items with IDs: ${JSON.stringify(itemIds)}`);
             await cartAPI.clearCart(itemIds);
-            console.log('Successfully updated cart with alternative approach');
           }
         } catch (retryError) {
           console.error(`Failed to retry: ${retryError.message}`);

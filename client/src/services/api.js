@@ -44,9 +44,7 @@ export const productAPI = {
   searchProducts: (query, params) => api.get('/products/search', { params: { query, ...params } }),
   getPopularProducts: (params) => api.get('/products/popular', { params }),
   createProduct: (productData) => {
-    console.log('Sending product data to server:', productData);
     if (productData instanceof FormData) {
-      console.log('FormData contents:');
       for (let [key, value] of productData.entries()) {
         console.log(`${key}: ${value instanceof File ? value.name : value}`);
       }
@@ -54,9 +52,7 @@ export const productAPI = {
     return api.post('/products', productData);
   },
   updateProduct: (id, productData) => {
-    console.log('Updating product data on server:', id, productData);
     if (productData instanceof FormData) {
-      console.log('FormData contents:');
       for (let [key, value] of productData.entries()) {
         console.log(`${key}: ${value instanceof File ? value.name : value}`);
       }
@@ -96,6 +92,7 @@ export const cartAPI = {
 
 export const orderAPI = {
   createOrder: (data) => api.post('/orders', data),
+  createFallbackOrder: (data) => api.post('/orders/fallback', data),
   getMyOrders: (params) => api.get('/orders/my-orders', { params }),
   getMyOrderById: (id) => api.get(`/orders/my-orders/${id}`),
   cancelOrder: (id) => api.post(`/orders/${id}/cancel`),

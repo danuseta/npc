@@ -53,7 +53,6 @@ const Home = () => {
           .filter(slide => slide.isActive)
           .sort((a, b) => a.displayOrder - b.displayOrder);
         
-        console.log('Carousel slides loaded:', activeSlides);
         setCarouselSlides(activeSlides);
       } catch (error) {
         console.error('Error fetching carousel slides:', error);
@@ -81,21 +80,18 @@ const Home = () => {
       try {
         setLoading(true);
         
-        console.log('Fetching latest products...');
         const latestResponse = await productAPI.getAllProducts({
           limit: 5,
           sort: 'createdAt',
           order: 'DESC'
         });
         
-        console.log('Fetching popular products...');
         let popularResponse;
         try {
           popularResponse = await productAPI.getPopularProducts({
             limit: 5
           });
         } catch (error) {
-          console.log('Error fetching popular products, falling back to regular products');
           console.error('Error:', error);
           popularResponse = await productAPI.getAllProducts({
             limit: 5,
@@ -104,7 +100,6 @@ const Home = () => {
           });
         }
         
-        console.log('Fetching categories...');
         const categoriesResponse = await categoryAPI.getAllCategories();
         
         setDebug({
@@ -114,10 +109,6 @@ const Home = () => {
           error: null
         });
         
-        console.log('Latest products response:', latestResponse);
-        console.log('Popular products response:', popularResponse);
-        console.log('Categories response:', categoriesResponse);
-        
         const mapProductData = (products) => {
           if (!products || !Array.isArray(products)) {
             console.error('Products data is not an array:', products);
@@ -125,7 +116,6 @@ const Home = () => {
           }
           
           return products.map(product => {
-            console.log('Mapping product:', product);
             
             const mappedProduct = {
               id: product.id,
@@ -143,7 +133,6 @@ const Home = () => {
               totalSold: product.totalSold || 0
             };
             
-            console.log('Mapped to:', mappedProduct);
             return mappedProduct;
           });
         };
@@ -155,7 +144,6 @@ const Home = () => {
         } else if (categoriesResponse?.data && Array.isArray(categoriesResponse.data)) {
           categoriesData = categoriesResponse.data;
         } else if (categoriesResponse?.data) {
-          console.log('Categories response format different than expected:', categoriesResponse.data);
           
           const keys = Object.keys(categoriesResponse.data);
           if (keys.includes('data') && Array.isArray(categoriesResponse.data.data)) {
@@ -163,10 +151,8 @@ const Home = () => {
           }
         }
         
-        console.log('Categories data extracted:', categoriesData);
-        
         const transformedCategories = categoriesData.map(category => {
-          console.log('Transforming category:', category);
+          
           return {
             id: category.id,
             name: category.name,
@@ -175,8 +161,6 @@ const Home = () => {
           };
         });
         
-        console.log('Transformed categories:', transformedCategories);
-        
         let latestProductsData = [];
         if (latestResponse?.data?.data && Array.isArray(latestResponse.data.data)) {
           latestProductsData = latestResponse.data.data;
@@ -184,20 +168,14 @@ const Home = () => {
           latestProductsData = latestResponse.data;
         }
         
-        console.log('Latest products data extracted:', latestProductsData);
         const mappedLatestProducts = mapProductData(latestProductsData);
-        console.log('Mapped latest products:', mappedLatestProducts);
         setLatestProducts(mappedLatestProducts);
         
         if (popularResponse?.data?.data && Array.isArray(popularResponse.data.data)) {
-          console.log('Popular products data found in response.data.data');
           const mappedPopularProducts = mapProductData(popularResponse.data.data);
-          console.log('Mapped popular products:', mappedPopularProducts);
           setPopularProducts(mappedPopularProducts);
         } else if (popularResponse?.data && Array.isArray(popularResponse.data)) {
-          console.log('Popular products data found in response.data');
           const mappedPopularProducts = mapProductData(popularResponse.data);
-          console.log('Mapped popular products:', mappedPopularProducts);
           setPopularProducts(mappedPopularProducts);
         } else {
           console.log('No popular products data found in expected format');

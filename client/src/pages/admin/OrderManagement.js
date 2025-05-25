@@ -341,8 +341,6 @@ const OrderManagement = () => {
         data.trackingNumber = trackingNumber;
       }
       
-      console.log('Sending order update data:', data);
-      
       const response = await orderAPI.updateOrderStatus(selectedOrder.id, data);
       
       if (response.data.success) {
@@ -478,8 +476,6 @@ const OrderManagement = () => {
         }));
       }
       
-      console.log('Invoice Order Items:', orderItems);
-      
       const formattedOrder = {
         id: orderData.id,
         orderNumber: orderData.orderNumber || orderData.id,
@@ -495,8 +491,6 @@ const OrderManagement = () => {
         subtotal: parseFloat(orderData.totalAmount || (orderData.grandTotal - (orderData.shippingFee || 0)) || 0),
         shippingFee: parseFloat(orderData.shippingFee || 0)
       };
-      
-      console.log('Formatted Order for Invoice:', formattedOrder);
       
       setPrintingOrder(formattedOrder);
       setIsPrintModalOpen(true);
@@ -585,8 +579,6 @@ const OrderManagement = () => {
       if (!dataToExport || dataToExport.length === 0) {
         throw new Error('No order data available for export');
       }
-      
-      console.log(`Exporting ${dataToExport.length} orders`);
       
       let htmlContent = `
         <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">

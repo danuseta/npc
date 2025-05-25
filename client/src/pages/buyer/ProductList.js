@@ -84,10 +84,8 @@ const ProductList = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      console.log(`Fetching products with sort type: ${sortBy}`);
       let response;
       if (sortBy === 'popular') {
-        console.log('Using getPopularProducts API endpoint');
         const params = {
           limit: itemsPerPage,
           page: currentPage
@@ -105,7 +103,6 @@ const ProductList = () => {
         }
         response = await productAPI.getPopularProducts(params);
       } else if (sortBy === 'newest') {
-        console.log('Using getAllProducts API endpoint with createdAt sort');
         const params = {
           page: currentPage,
           limit: itemsPerPage,
@@ -116,19 +113,15 @@ const ProductList = () => {
         if (selectedCategory !== 'all') {
           const categoryObj = categories.find(cat => cat.name === selectedCategory);
           if (categoryObj) {
-            console.log('Found category:', categoryObj);
             response = await productAPI.getProductsByCategory(categoryObj.id, params);
           } else {
-            console.log('Category not found, using search');
             params.search = selectedCategory;
             response = await productAPI.getAllProducts(params);
           }
         } else {
-          console.log('Getting all products');
           response = await productAPI.getAllProducts(params);
         }
       } else {
-        console.log('Using getAllProducts API endpoint with standard sorting');
         const params = {
           page: currentPage,
           limit: itemsPerPage,
@@ -152,31 +145,25 @@ const ProductList = () => {
             params.order = 'DESC';
             break;
         }
-        console.log('Fetching with params:', params);
         if (selectedCategory !== 'all') {
           const categoryObj = categories.find(cat => cat.name === selectedCategory);
           if (categoryObj) {
-            console.log('Found category:', categoryObj);
             response = await productAPI.getProductsByCategory(categoryObj.id, params);
           } else {
-            console.log('Category not found, using search');
             params.search = selectedCategory;
             response = await productAPI.getAllProducts(params);
           }
         } else {
-          console.log('Getting all products');
           response = await productAPI.getAllProducts(params);
         }
       }
       setDebug(prev => ({...prev, apiResponse: response}));
-      console.log('API response:', response);
       const mapProductData = (products) => {
         if (!products || !Array.isArray(products)) {
           console.error('Products data is not an array:', products);
           return [];
         }
         return products.map(product => {
-          console.log('Mapping product:', product);
           return {
             id: product.id,
             name: product.name || 'Unnamed Product',
@@ -206,10 +193,7 @@ const ProductList = () => {
         productsData = response.data;
         paginationInfo = { totalPages: 1, totalItems: productsData.length };
       }
-      console.log('Products data extracted:', productsData);
-      console.log('Pagination info:', paginationInfo);
       const mappedProducts = mapProductData(productsData);
-      console.log('Mapped products:', mappedProducts);
       setProducts(mappedProducts);
       setTotalPages(paginationInfo.totalPages || 1);
       setTotalItems(paginationInfo.totalItems || mappedProducts.length);
@@ -227,7 +211,6 @@ const ProductList = () => {
   const fetchCategories = async () => {
     try {
       const response = await categoryAPI.getAllCategories();
-      console.log('Categories response:', response);
       setDebug(prev => ({...prev, categoryResponse: response}));
       let categoriesData = [];
       if (response?.data?.data && Array.isArray(response.data.data)) {
@@ -235,20 +218,17 @@ const ProductList = () => {
       } else if (response?.data && Array.isArray(response.data)) {
         categoriesData = response.data;
       } else if (response?.data) {
-        console.log('Categories response format different than expected:', response.data);
         const keys = Object.keys(response.data);
         if (keys.includes('data') && Array.isArray(response.data.data)) {
           categoriesData = response.data.data;
         }
       }
-      console.log('Categories data extracted:', categoriesData);
       const transformedCategories = categoriesData.map(category => ({
         id: category.id,
         name: category.name,
         count: category.productCount || 0,
         icon: getCategoryIcon(category.name)
       }));
-      console.log('Transformed categories:', transformedCategories);
       setCategories(transformedCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);

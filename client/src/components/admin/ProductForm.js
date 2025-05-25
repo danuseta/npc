@@ -231,14 +231,12 @@ const ProductForm = ({ product, categories, onSubmit, onClose }) => {
     productFormData.append('discountPercentage', formData.discountPercentage || 0);
     
     if (formData.images[0] instanceof File) {
-      console.log(`Menambahkan main image:`, formData.images[0].name);
       productFormData.append('mainImage', formData.images[0]);
     }
     
 
     for (let i = 1; i < formData.images.length; i++) {
       if (formData.images[i] instanceof File) {
-        console.log(`Menambahkan gallery image ${i}:`, formData.images[i].name);
         productFormData.append('galleryImages', formData.images[i]);
       }
     }
@@ -247,18 +245,11 @@ const ProductForm = ({ product, categories, onSubmit, onClose }) => {
     if (Object.keys(formData.specifications).length > 0) {
       const specificationsString = JSON.stringify(formData.specifications);
       productFormData.append('specifications', specificationsString);
-      console.log('Specifications yang dikirim:', specificationsString);
     }
     
     if (formData.features.length > 0) {
       const featuresString = JSON.stringify(formData.features);
       productFormData.append('features', featuresString);
-      console.log('Features yang dikirim:', featuresString);
-    }
-    
-    console.log('Isi FormData yang akan dikirim:');
-    for (let [key, value] of productFormData.entries()) {
-      console.log(`${key}: ${value instanceof File ? value.name : value}`);
     }
     
     onSubmit(productFormData);

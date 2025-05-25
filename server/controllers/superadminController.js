@@ -362,7 +362,7 @@ exports.getTopAdmins = async (req, res) => {
         a1.userId, 
         AVG(TIMESTAMPDIFF(HOUR, o.createdAt, a1.createdAt)) as avgResponseTime
       FROM AdminActivities a1
-      JOIN Orders o ON a1.entityId = o.id
+      JOIN orders o ON a1.entityId = o.id
       WHERE 
         a1.userId IN (${adminIds.join(',')})
         AND a1.entityType = 'Order'
@@ -474,7 +474,7 @@ exports.getDashboardSummary = async (req, res) => {
       SELECT 
         o.userId, 
         SUM(o.grandTotal) as totalSpent
-      FROM Orders o
+      FROM orders o
       WHERE 
         o.userId IN (${customerIds.join(',')})
         AND o.status NOT IN ('cancelled')
@@ -499,10 +499,10 @@ exports.getDashboardSummary = async (req, res) => {
 SELECT 
   c.name as category, 
   SUM(oi.totalPrice) as totalAmount
-FROM OrderItems oi
+FROM orderitems oi
 LEFT JOIN Products p ON oi.productId = p.id
 LEFT JOIN Categories c ON p.categoryId = c.id
-LEFT JOIN Orders o ON oi.orderId = o.id
+LEFT JOIN orders o ON oi.orderId = o.id
 WHERE o.status NOT IN ('cancelled')
 GROUP BY p.categoryId, c.name
 ORDER BY SUM(oi.totalPrice) DESC

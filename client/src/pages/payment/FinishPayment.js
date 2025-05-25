@@ -42,7 +42,6 @@ const FinishPayment = () => {
   
   const createFallbackOrder = async (paymentData) => {
     try {
-      console.log('Trying to create fallback order from payment data:', paymentData);
       
       if (!paymentData.transaction_id || !paymentData.gross_amount) {
         throw new Error('Incomplete transaction data for creating fallback order');
@@ -67,7 +66,6 @@ const FinishPayment = () => {
       const response = await orderAPI.createFallbackOrder(fallbackOrderData);
       
       if (response.data && response.data.success) {
-        console.log('Fallback order created successfully:', response.data.data);
         
         setOrder(response.data.data);
         setErrorMessage('');
@@ -93,15 +91,12 @@ const FinishPayment = () => {
         const storedPayment = getPaymentDataFromStorage();
         if (storedPayment) {
           setPayment(storedPayment);
-          console.log('Using payment data from storage:', storedPayment);
         }
         
         if (orderId.startsWith('TEMP_')) {
-          console.log('Detected temporary order ID:', orderId);
           
           const attemptOrderFetch = async () => {
             try {
-              console.log(`Attempting to get latest order (Attempt ${retryCount + 1}/${MAX_RETRIES})...`);
               
               const response = await orderAPI.getMyOrders({ limit: 1 });
               

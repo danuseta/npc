@@ -148,7 +148,6 @@ const Cart = () => {
         };
       });
       
-      console.log('Formatted items:', formattedItems);
       
       setCartItems(formattedItems);
       setCartInfo(cart);
@@ -202,7 +201,6 @@ const Cart = () => {
     if (newQuantity < 1 || newQuantity > item.stock) return;
     
     try {
-      console.log(`Updating quantity for item ${itemId} to ${newQuantity}...`);
       await cartAPI.updateCartItem(itemId, { quantity: newQuantity });
       
       const updatedItems = cartItems.map(cartItem => {
@@ -237,9 +235,7 @@ const Cart = () => {
     }
     
     try {
-      console.log(`Removing item ${itemId} from cart...`);
       const response = await cartAPI.removeCartItem(itemId);
-      console.log('Remove response:', response);
       
       const updatedItems = cartItems.filter(item => item.id !== itemId);
       setCartItems(updatedItems);
