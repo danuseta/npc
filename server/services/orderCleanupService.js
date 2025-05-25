@@ -14,6 +14,8 @@ class OrderCleanupService {
   async cleanupPendingOrders() {
     const transaction = await sequelize.transaction();
     try {
+      console.log('Order model table name:', Order.tableName);
+      
       const pendingOrders = await Order.findAll({
         where: {
           status: 'pending',
@@ -56,6 +58,12 @@ class OrderCleanupService {
     } catch (error) {
       await transaction.rollback();
       console.error('Error during order cleanup:', error);
+      
+      if (error.original && error.original.code === 'ER_NO_SUCH_TABLE') {
+        console.error('Table does not exist. Check if table names match the database (case sensitive).');
+        console.error('Expected table name:', Order.tableName);
+      }
+      
       console.error('Stack trace:', error.stack);
     }
   }

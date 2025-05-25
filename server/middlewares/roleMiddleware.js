@@ -3,7 +3,7 @@ const restrictTo = (...roles) => {
       if (!roles.includes(req.user.role)) {
         return res.status(403).json({
           success: false,
-          message: `Access denied. This action requires ${roles.join(' or ')} privileges.`
+          message: `Access denied. This feature is only available for ${roles.join(' or ')} users. Your current role is '${req.user.role}'.`
         });
       }
       next();

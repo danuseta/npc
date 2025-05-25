@@ -40,7 +40,7 @@ const founders = [
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20">
+    <div className="min-h-screen bg-gray-50 pt-6 sm:pt-8 md:pt-10">
       {/* <Helmet>
         <title>About Us | NPC Store</title>
         <meta name="description" content="Learn about Nusantara PC Store, the premier destination for computer hardware and accessories in Indonesia." />

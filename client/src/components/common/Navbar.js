@@ -190,7 +190,7 @@ const Navbar = () => {
                         My Profile
                       </Link>
                       
-                      {user.role !== 'superadmin' && (
+                      {user.role === 'buyer' && (
                         <Link to="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <i className="fas fa-box mr-2 text-gray-500"></i>
                           My Orders
@@ -301,7 +301,7 @@ const Navbar = () => {
                     My Profile
                   </Link>
                   
-                  {user.role !== 'superadmin' && (
+                  {user.role === 'buyer' && (
                     <Link to="/orders" className="py-3 px-3 rounded flex items-center text-gray-600 hover:bg-gray-100 active:bg-gray-200">
                       <i className="fas fa-box mr-2 w-5 text-center"></i>
                       My Orders

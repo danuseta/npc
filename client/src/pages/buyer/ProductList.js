@@ -428,9 +428,8 @@ const ProductList = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-6 sm:pt-8 md:pt-10">
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
-        {showDebugInfo()}
         <div className="text-xs sm:text-sm breadcrumbs mb-3 sm:mb-4 overflow-x-auto whitespace-nowrap">
           <ul>
             <li><a href="/" className="text-npc-navy hover:text-npc-gold">Home</a></li>

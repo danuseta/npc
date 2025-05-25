@@ -25,6 +25,7 @@ export const CartProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Error fetching cart count:', error);
+        setCartItemCount(0);
       }
     } else {
       setCartItemCount(0);

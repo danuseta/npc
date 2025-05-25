@@ -77,23 +77,24 @@ const Order = sequelize.define('Order', {
   }
 }, {
   timestamps: true,
-hooks: {
-  beforeValidate: (order) => {
-    if (!order.orderNumber) {
-      const dateStr = new Date().toISOString()
-        .replace(/[-:T.Z]/g, '')
-        .substring(0, 14);
-      const random = Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, '0');
-      order.orderNumber = `ORD-${dateStr}-${random}`;
+  tableName: 'orders', 
+  hooks: {
+    beforeValidate: (order) => {
+      if (!order.orderNumber) {
+        const dateStr = new Date().toISOString()
+          .replace(/[-:T.Z]/g, '')
+          .substring(0, 14);
+        const random = Math.floor(Math.random() * 10000)
+          .toString()
+          .padStart(4, '0');
+        order.orderNumber = `ORD-${dateStr}-${random}`;
+      }
+      
+      order.grandTotal = parseFloat(order.totalAmount || 0) + 
+                        parseFloat(order.tax || 0) + 
+                        parseFloat(order.shippingFee || 0);
     }
-    
-    order.grandTotal = parseFloat(order.totalAmount || 0) + 
-                      parseFloat(order.tax || 0) + 
-                      parseFloat(order.shippingFee || 0);
   }
-}
 });
 
 module.exports = Order;

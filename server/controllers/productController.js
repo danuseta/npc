@@ -14,8 +14,9 @@ exports.getAllProducts = async (req, res) => {
     const search = req.query.search;
     const sort = req.query.sort || 'createdAt';
     const order = req.query.order?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    const includeInactive = req.query.includeInactive === 'true';
 
-    const whereClause = { isActive: true };
+    const whereClause = includeInactive ? {} : { isActive: true };
 
     if (categoryId) {
       whereClause.categoryId = categoryId;
@@ -803,13 +804,34 @@ exports.deleteProduct = async (req, res) => {
       });
     }
 
-    await product.update({ isActive: false });
+    if (product.imagePublicId) {
+      try {
+        await uploadMiddleware.deleteFromCloudinary(product.imagePublicId);
+      } catch (cloudinaryError) {
+        console.error('Error deleting main image from Cloudinary:', cloudinaryError);
+      }
+    }
+
+    if (product.gallery && product.gallery.length > 0) {
+      for (const image of product.gallery) {
+        if (image.publicId) {
+          try {
+            await uploadMiddleware.deleteFromCloudinary(image.publicId);
+          } catch (cloudinaryError) {
+            console.error('Error deleting gallery image from Cloudinary:', cloudinaryError);
+          }
+        }
+      }
+    }
+
+    await product.destroy();
 
     res.status(200).json({
       success: true,
-      message: 'Product deleted successfully'
+      message: 'Product deleted permanently'
     });
   } catch (error) {
+    console.error('Error deleting product:', error);
     res.status(500).json({
       success: false,
       message: 'Error deleting product',

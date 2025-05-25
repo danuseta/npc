@@ -14,7 +14,10 @@ exports.getAllProducts = async (params) => {
     const search = params.search;
     const sort = params.sort || 'createdAt';
     const order = params.order?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
-    const whereClause = { isActive: true };
+    const includeInactive = params.includeInactive === 'true';
+    
+    const whereClause = includeInactive ? {} : { isActive: true };
+    
     if (categoryId) {
       whereClause.categoryId = categoryId;
     }
@@ -337,7 +340,28 @@ exports.deleteProduct = async (id) => {
     if (!product) {
       throw new Error('Product not found');
     }
-    await product.update({ isActive: false });
+
+    if (product.imagePublicId) {
+      try {
+        await uploadMiddleware.deleteFromCloudinary(product.imagePublicId);
+      } catch (cloudinaryError) {
+        console.error('Error deleting main image from Cloudinary:', cloudinaryError);
+      }
+    }
+
+    if (product.gallery && product.gallery.length > 0) {
+      for (const image of product.gallery) {
+        if (image.publicId) {
+          try {
+            await uploadMiddleware.deleteFromCloudinary(image.publicId);
+          } catch (cloudinaryError) {
+            console.error('Error deleting gallery image from Cloudinary:', cloudinaryError);
+          }
+        }
+      }
+    }
+
+    await product.destroy();
     return true;
   } catch (error) {
     throw error;

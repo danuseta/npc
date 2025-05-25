@@ -305,9 +305,8 @@ const ProductDetail = () => {
   ].filter(Boolean);
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-6 sm:pt-8 md:pt-10">
       <main className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
-        {showDebugInfo()}
         {isAdmin && (
           <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-3 sm:p-4 mb-3 sm:mb-4 rounded text-sm">
             <div className="flex items-center">

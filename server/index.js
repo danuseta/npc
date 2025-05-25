@@ -17,6 +17,15 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'Active',
+    message: 'NPC Store API is running',
+    version: '1.0.0',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use('/api', routes);
 
 app.use((err, req, res, next) => {
@@ -30,39 +39,45 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-sequelize.sync({ alter: process.env.NODE_ENV === 'development' })
-  .then(() => {
-    const server = app.listen(PORT, () => {
+const initializeDatabase = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection has been established successfully.');
+    
+    app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
       
       orderCleanupService.start();
       console.log('Order cleanup service has been started');
     });
-    
-    process.on('SIGTERM', () => {
-      console.log('SIGTERM signal received: closing HTTP server');
-      
-      orderCleanupService.stop();
-      console.log('Order cleanup service has been stopped');
-      
-      server.close(() => {
-        console.log('HTTP server closed');
-        process.exit(0);
-      });
-    });
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+    process.exit(1);
+  }
+};
 
-    process.on('SIGINT', () => {
-      console.log('SIGINT signal received: closing HTTP server');
-      
-      orderCleanupService.stop();
-      console.log('Order cleanup service has been stopped');
-      
-      server.close(() => {
-        console.log('HTTP server closed');
-        process.exit(0);
-      });
-    });
-  })
-  .catch(err => {
-    console.error('Failed to sync database:', err);
+initializeDatabase();
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  
+  orderCleanupService.stop();
+  console.log('Order cleanup service has been stopped');
+  
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
   });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing HTTP server');
+  
+  orderCleanupService.stop();
+  console.log('Order cleanup service has been stopped');
+  
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
+});

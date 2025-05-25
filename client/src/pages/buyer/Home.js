@@ -361,7 +361,6 @@ const Home = () => {
         quantity: 1
       });
       
-      // Update cart count in navbar
       updateCartCount();
       
       window.Swal?.fire({
@@ -436,10 +435,8 @@ const Home = () => {
   const slidesToUse = carouselSlides.length > 0 ? carouselSlides : fallbackCarouselData;
     
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="container mx-auto px-4 py-4 sm:py-6">
-        {showDebugInfo()}
-        
+    <div className="min-h-screen bg-gray-50 pt-6 sm:pt-8 md:pt-10">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         <div className="w-full mb-6 sm:mb-10 rounded-lg sm:rounded-2xl overflow-hidden shadow-lg aspect-[16/9] max-h-[400px] mx-auto">
           {carouselLoading ? (
             <div className="bg-gray-100 w-full h-full flex items-center justify-center">

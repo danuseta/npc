@@ -55,6 +55,7 @@ const OrderItem = sequelize.define('OrderItem', {
   }
 }, {
   timestamps: true,
+  tableName: 'orderitems', 
   hooks: {
     beforeValidate: (orderItem) => {
       if (orderItem.price && orderItem.quantity) {

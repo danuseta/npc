@@ -26,9 +26,11 @@ const Cart = () => {
   }, []);
   
   useEffect(() => {
-    fetchCartItems();
+    if (userCanShop) {
+      fetchCartItems();
+    }
     fetchCategories();
-  }, []);
+  }, [userCanShop]);
   
   useEffect(() => {
     if (selectAll) {
@@ -383,6 +385,19 @@ const Cart = () => {
         {loading || !productsLoaded ? (
           <div className="flex justify-center items-center h-64">
             <span className="loading loading-spinner loading-lg text-npc-gold"></span>
+          </div>
+        ) : !userCanShop ? (
+          <div className="card bg-white shadow-sm p-6 sm:p-8 text-center">
+            <div className="mx-auto h-32 sm:h-40 mb-4 flex items-center justify-center">
+              <i className="fas fa-user-shield text-6xl text-blue-500"></i>
+            </div>
+            <h2 className="text-lg sm:text-xl font-bold mb-2 text-gray-800">Admin Access</h2>
+            <p className="text-gray-600 mb-6">
+              As an {user?.role === 'admin' ? 'Admin' : 'Super Admin'}, you cannot access the shopping cart. This feature is only available for buyers.
+            </p>
+            <Link to="/products" className="btn btn-primary bg-npc-gold hover:bg-npc-darkGold border-none text-white">
+              Browse Products
+            </Link>
           </div>
         ) : cartItems.length === 0 ? (
           <div className="card bg-white shadow-sm p-6 sm:p-8 text-center">

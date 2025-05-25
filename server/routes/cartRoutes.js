@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const cartController = require('../controllers/cartController');
 const { protect } = require('../middlewares/authMiddleware');
+const { restrictTo } = require('../middlewares/roleMiddleware');
 
 router.use(protect);
+router.use(restrictTo('buyer'));
 
 router.get('/', cartController.getCart);
 

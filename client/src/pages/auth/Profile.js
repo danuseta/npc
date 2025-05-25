@@ -723,15 +723,15 @@ const Profile = () => {
   return (
     <>
       {showCropModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-11/12 max-w-3xl">
-            <h3 className="text-lg font-medium text-gray-800 mb-4">Adjust Your Profile Picture</h3>
-            <p className="text-sm text-gray-500 mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-3 sm:mb-4">Adjust Your Profile Picture</h3>
+            <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
               Drag or resize the highlighted area to select the portion of your image to use as your profile picture.
             </p>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 max-h-[60vh] overflow-auto flex justify-center border rounded">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+              <div className="lg:col-span-2 max-h-[50vh] sm:max-h-[60vh] overflow-auto flex justify-center border rounded">
                 <ReactCrop
                   src={src}
                   crop={crop}
@@ -744,11 +744,11 @@ const Profile = () => {
               </div>
               
               <div className="flex flex-col items-center justify-center">
-                <div className="text-center mb-4">
-                  <h4 className="font-medium text-gray-700 mb-2">Preview</h4>
+                <div className="text-center mb-3 sm:mb-4">
+                  <h4 className="text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Preview</h4>
                   <p className="text-xs text-gray-500">This is how your profile picture will appear</p>
                 </div>
-                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center bg-gray-100">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-gray-300 flex items-center justify-center bg-gray-100">
                   {imagePreviewCropped ? (
                     <img 
                       src={imagePreviewCropped} 
@@ -766,7 +766,7 @@ const Profile = () => {
                   <button
                     type="button"
                     onClick={handleCropReset}
-                    className="mt-4 text-sm text-blue-600 hover:text-blue-800"
+                    className="mt-3 sm:mt-4 text-xs sm:text-sm text-blue-600 hover:text-blue-800"
                   >
                     Reset Selection
                   </button>
@@ -774,23 +774,23 @@ const Profile = () => {
               </div>
             </div>
             
-            <div className="mt-6 flex flex-col sm:flex-row justify-between items-center">
-              <div className="text-xs text-gray-500 mb-4 sm:mb-0">
-                <ul className="list-disc pl-5">
+            <div className="mt-4 sm:mt-6 flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
+              <div className="text-xs text-gray-500 order-2 sm:order-1">
+                <ul className="list-disc pl-5 space-y-1">
                   <li>For best results, use a square image</li>
                   <li>Image will be displayed as a circle in your profile</li>
                 </ul>
               </div>
-              <div className="flex space-x-3">
+              <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 order-1 sm:order-2">
                 <button
                   onClick={handleCropCancel}
-                  className="btn bg-transparent hover:bg-black text-black hover:text-white border border-black hover:border-black"
+                  className="btn btn-sm sm:btn-md bg-transparent hover:bg-black text-black hover:text-white border border-black hover:border-black text-xs sm:text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCropSave}
-                  className="btn bg-npc-gold hover:bg-npc-darkGold text-white border-none"
+                  className="btn btn-sm sm:btn-md bg-npc-gold hover:bg-npc-darkGold text-white border-none text-xs sm:text-sm"
                   disabled={!completedCrop?.width || !completedCrop?.height}
                 >
                   Save
@@ -801,61 +801,61 @@ const Profile = () => {
         </div>
       )}
       
-      <div className="min-h-screen bg-gray-100 py-8">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white shadow rounded-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-npc-navy to-npc-gold p-6">
-              <h1 className="text-2xl font-bold text-white">My Account</h1>
-              <p className="text-sm opacity-80 text-white">Manage your personal information and account settings</p>
+      <div className="min-h-screen bg-gray-100 pt-12 sm:pt-14 md:pt-16 py-4 sm:py-6 md:py-8">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="max-w-4xl mx-auto bg-white shadow-sm sm:shadow rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-npc-navy to-npc-gold p-4 sm:p-6">
+              <h1 className="text-xl sm:text-2xl font-bold text-white">My Account</h1>
+              <p className="text-xs sm:text-sm opacity-80 text-white mt-1">Manage your personal information and account settings</p>
             </div>
             
             <div className="border-b">
-              <div className="flex flex-wrap">
+              <div className="flex overflow-x-auto">
                 <button
-                  className={`px-6 py-3 text-sm font-medium ${
+                  className={`px-4 sm:px-6 py-3 text-xs sm:text-sm font-medium whitespace-nowrap ${
                     activeTab === 'profile'
                       ? 'border-b-2 border-npc-gold text-npc-gold'
                       : 'text-gray-500 hover:text-npc-navy'
                   }`}
                   onClick={() => setActiveTab('profile')}
                 >
-                  <i className="fas fa-user mr-2"></i>
+                  <i className="fas fa-user mr-1 sm:mr-2"></i>
                   Profile
                 </button>
                 
                 <button
-                  className={`px-6 py-3 text-sm font-medium ${
+                  className={`px-4 sm:px-6 py-3 text-xs sm:text-sm font-medium whitespace-nowrap ${
                     activeTab === 'address'
                       ? 'border-b-2 border-npc-gold text-npc-gold'
                       : 'text-gray-500 hover:text-npc-navy'
                   }`}
                   onClick={() => setActiveTab('address')}
                 >
-                  <i className="fas fa-map-marker-alt mr-2"></i>
+                  <i className="fas fa-map-marker-alt mr-1 sm:mr-2"></i>
                   Address
                 </button>
                 
                 <button
-                  className={`px-6 py-3 text-sm font-medium ${
+                  className={`px-4 sm:px-6 py-3 text-xs sm:text-sm font-medium whitespace-nowrap ${
                     activeTab === 'security'
                       ? 'border-b-2 border-npc-gold text-npc-gold'
                       : 'text-gray-500 hover:text-npc-navy'
                   }`}
                   onClick={() => setActiveTab('security')}
                 >
-                  <i className="fas fa-lock mr-2"></i>
+                  <i className="fas fa-lock mr-1 sm:mr-2"></i>
                   Security
                 </button>
               </div>
             </div>
             
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {activeTab === 'profile' && (
                 <form onSubmit={handleProfileUpdate}>
-                  <div className="space-y-6">
-                    <div className="flex flex-col sm:flex-row items-center gap-6">
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-6">
                       <div className="relative">
-                        <div className="w-32 h-32 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-200 rounded-full overflow-hidden">
                           {imagePreview ? (
                             <img
                               src={imagePreview}
@@ -864,7 +864,7 @@ const Profile = () => {
                             />
                           ) : (
                             <div className="flex items-center justify-center h-full bg-gray-100 text-gray-400">
-                              <i className="fas fa-user text-4xl"></i>
+                              <i className="fas fa-user text-2xl sm:text-4xl"></i>
                             </div>
                           )}
                         </div>
@@ -878,18 +878,18 @@ const Profile = () => {
                         />
                       </div>
                       
-                      <div className="flex flex-col gap-2">
-                        <h3 className="font-medium text-gray-800">Profile Picture</h3>
-                        <p className="text-sm text-gray-500">
+                      <div className="flex flex-col gap-2 text-center sm:text-left">
+                        <h3 className="text-sm sm:text-base font-medium text-gray-800">Profile Picture</h3>
+                        <p className="text-xs sm:text-sm text-gray-500">
                           Upload a new profile picture. JPG, GIF or PNG. Max size 2MB.
                         </p>
-                        <div className="flex gap-2 mt-2">
+                        <div className="flex flex-col gap-2 mt-2 sm:flex-row">
                           <button
                             type="button"
                             onClick={handleChooseFile}
-                            className="btn bg-npc-gold hover:bg-npc-darkGold text-white border-none"
+                            className="btn btn-sm sm:btn-md bg-npc-gold hover:bg-npc-darkGold text-white border-none text-xs sm:text-sm"
                           >
-                            <i className="fas fa-upload mr-2"></i>
+                            <i className="fas fa-upload mr-1 sm:mr-2"></i>
                             Upload
                           </button>
                           
@@ -897,9 +897,9 @@ const Profile = () => {
                             <button
                               type="button"
                               onClick={handleRemoveImage}
-                              className="btn btn-sm btn-outline btn-error"
+                              className="btn btn-sm btn-outline btn-error text-xs sm:text-sm"
                             >
-                              <i className="fas fa-times mr-2"></i>
+                              <i className="fas fa-times mr-1 sm:mr-2"></i>
                               Remove
                             </button>
                           )}
@@ -909,10 +909,10 @@ const Profile = () => {
                     
                     <div className="divider"></div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">Full Name</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Full Name</span>
                         </label>
                         <input
                           id="name"
@@ -920,19 +920,19 @@ const Profile = () => {
                           type="text"
                           value={profileForm.name}
                           onChange={handleProfileChange}
-                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.name ? 'input-error' : ''}`}
+                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.name ? 'input-error' : ''}`}
                           placeholder="Enter your full name"
                         />
                         {errors.name && (
                           <label className="label">
-                            <span className="label-text-alt text-error">{errors.name}</span>
+                            <span className="label-text-alt text-error text-xs">{errors.name}</span>
                           </label>
                         )}
                       </div>
                       
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">Email Address</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Email Address</span>
                         </label>
                         <input
                           id="email"
@@ -940,16 +940,16 @@ const Profile = () => {
                           type="email"
                           value={profileForm.email}
                           readOnly
-                          className="input input-bordered w-full bg-gray-50 text-gray-500 border-gray-300"
+                          className="input input-bordered w-full bg-gray-50 text-gray-500 border-gray-300 text-sm sm:text-base"
                         />
                         <label className="label">
-                          <span className="label-text-alt text-gray-500">Email cannot be changed. Contact support if needed.</span>
+                          <span className="label-text-alt text-gray-500 text-xs">Email cannot be changed. Contact support if needed.</span>
                         </label>
                       </div>
                       
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">Phone Number</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Phone Number</span>
                         </label>
                         <input
                           id="phone"
@@ -957,19 +957,19 @@ const Profile = () => {
                           type="tel"
                           value={profileForm.phone}
                           onChange={handleProfileChange}
-                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.phone ? 'input-error' : ''}`}
+                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.phone ? 'input-error' : ''}`}
                           placeholder="08123456789"
                         />
                         {errors.phone && (
                           <label className="label">
-                            <span className="label-text-alt text-error">{errors.phone}</span>
+                            <span className="label-text-alt text-error text-xs">{errors.phone}</span>
                           </label>
                         )}
                       </div>
                       
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">Date of Birth</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Date of Birth</span>
                         </label>
                         <input
                           id="dateOfBirth"
@@ -977,20 +977,20 @@ const Profile = () => {
                           type="date"
                           value={profileForm.dateOfBirth}
                           onChange={handleProfileChange}
-                          className="input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold"
+                          className="input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base"
                         />
                       </div>
                       
-                      <div className="form-control">
+                      <div className="form-control md:col-span-2">
                         <label className="label">
-                          <span className="label-text text-gray-700">Gender</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Gender</span>
                         </label>
                         <select
                           id="gender"
                           name="gender"
                           value={profileForm.gender}
                           onChange={handleProfileChange}
-                          className="select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold"
+                          className="select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base"
                         >
                           <option value="">Select gender</option>
                           <option value="male">Male</option>
@@ -1001,10 +1001,10 @@ const Profile = () => {
                       </div>
                     </div>
                     
-                    <div className="flex justify-end mt-6">
+                    <div className="flex justify-center sm:justify-end mt-4 sm:mt-6">
                       <button
                         type="submit"
-                        className={`btn bg-npc-gold hover:bg-npc-darkGold text-white border-none${isLoading ? 'loading' : ''}`}
+                        className={`btn btn-sm sm:btn-md bg-npc-gold hover:bg-npc-darkGold text-white border-none w-full sm:w-auto text-sm sm:text-base${isLoading ? ' loading' : ''}`}
                         disabled={isLoading}
                       >
                         {isLoading ? 'Saving...' : 'Save Changes'}
@@ -1016,16 +1016,16 @@ const Profile = () => {
               
               {activeTab === 'address' && (
                 <form onSubmit={handleAddressUpdate}>
-                  <div className="space-y-6">
-                    <h3 className="text-lg font-medium text-gray-800">Shipping Address</h3>
-                    <p className="text-sm text-gray-500">
+                  <div className="space-y-4 sm:space-y-6">
+                    <h3 className="text-base sm:text-lg font-medium text-gray-800">Shipping Address</h3>
+                    <p className="text-xs sm:text-sm text-gray-500">
                       This address will be used as your default shipping address for orders.
                     </p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div className="form-control md:col-span-2">
                         <label className="label">
-                          <span className="label-text text-gray-700">Street Address</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Street Address</span>
                         </label>
                         <textarea
                           id="address"
@@ -1033,14 +1033,14 @@ const Profile = () => {
                           rows="3"
                           value={addressForm.address || ''}
                           onChange={handleAddressChange}
-                          className="textarea textarea-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold"
+                          className="textarea textarea-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base"
                           placeholder="Enter your street address"
                         ></textarea>
                       </div>
                       
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">Province</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Province</span>
                           {hasProvince && (
                             <button
                               type="button"
@@ -1058,7 +1058,7 @@ const Profile = () => {
                               type="text"
                               readOnly
                               value={addressForm.provinceName}
-                              className="input input-bordered w-full bg-gray-50 text-gray-700"
+                              className="input input-bordered w-full bg-gray-50 text-gray-700 text-sm sm:text-base"
                             />
                           </div>
                         ) : (
@@ -1067,7 +1067,7 @@ const Profile = () => {
                             name="province"
                             value={addressForm.province}
                             onChange={handleAddressChange}
-                            className={`select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.province ? 'select-error' : ''}`}
+                            className={`select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.province ? 'select-error' : ''}`}
                             disabled={loadingProvinces}
                           >
                             <option value="">Select province</option>
@@ -1081,19 +1081,19 @@ const Profile = () => {
                         
                         {errors.province && (
                           <label className="label">
-                            <span className="label-text-alt text-error">{errors.province}</span>
+                            <span className="label-text-alt text-error text-xs">{errors.province}</span>
                           </label>
                         )}
                         {loadingProvinces && (
                           <label className="label">
-                            <span className="label-text-alt text-gray-500">Loading provinces...</span>
+                            <span className="label-text-alt text-gray-500 text-xs">Loading provinces...</span>
                           </label>
                         )}
                       </div>
                       
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">City</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">City</span>
                           {hasCity && (
                             <button
                               type="button"
@@ -1110,7 +1110,7 @@ const Profile = () => {
                             type="text"
                             readOnly
                             value={addressForm.cityName}
-                            className="input input-bordered w-full bg-gray-50 text-gray-700"
+                            className="input input-bordered w-full bg-gray-50 text-gray-700 text-sm sm:text-base"
                           />
                         ) : (
                           <select
@@ -1118,7 +1118,7 @@ const Profile = () => {
                             name="city"
                             value={addressForm.city}
                             onChange={handleAddressChange}
-                            className={`select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.city ? 'select-error' : ''}`}
+                            className={`select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.city ? 'select-error' : ''}`}
                             disabled={!addressForm.province || loadingCities}
                           >
                             <option value="">Select city</option>
@@ -1132,24 +1132,24 @@ const Profile = () => {
                         
                         {errors.city && (
                           <label className="label">
-                            <span className="label-text-alt text-error">{errors.city}</span>
+                            <span className="label-text-alt text-error text-xs">{errors.city}</span>
                           </label>
                         )}
                         {loadingCities && (
                           <label className="label">
-                            <span className="label-text-alt text-gray-500">Loading cities...</span>
+                            <span className="label-text-alt text-gray-500 text-xs">Loading cities...</span>
                           </label>
                         )}
                         {!addressForm.province && !loadingCities && !hasCity && (
                           <label className="label">
-                            <span className="label-text-alt text-gray-500">Please select a province first</span>
+                            <span className="label-text-alt text-gray-500 text-xs">Please select a province first</span>
                           </label>
                         )}
                       </div>
                       
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">ZIP/Postal Code</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">ZIP/Postal Code</span>
                         </label>
                         <input
                           id="zipCode"
@@ -1157,26 +1157,26 @@ const Profile = () => {
                           type="text"
                           value={addressForm.zipCode || ''}
                           onChange={handleAddressChange}
-                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.zipCode ? 'input-error' : ''}`}
+                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.zipCode ? 'input-error' : ''}`}
                           placeholder="Enter your ZIP code"
                         />
                         {errors.zipCode && (
                           <label className="label">
-                            <span className="label-text-alt text-error">{errors.zipCode}</span>
+                            <span className="label-text-alt text-error text-xs">{errors.zipCode}</span>
                           </label>
                         )}
                       </div>
                       
                       <div className="form-control">
                         <label className="label">
-                          <span className="label-text text-gray-700">Country</span>
+                          <span className="label-text text-sm sm:text-base text-gray-700">Country</span>
                         </label>
                         <select
                           id="country"
                           name="country"
                           value={addressForm.country || 'Indonesia'}
                           onChange={handleAddressChange}
-                          className="select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold"
+                          className="select select-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base"
                         >
                           <option value="Indonesia">Indonesia</option>
                           <option value="Malaysia">Malaysia</option>
@@ -1188,10 +1188,10 @@ const Profile = () => {
                       </div>
                     </div>
                     
-                    <div className="flex justify-end mt-6">
+                    <div className="flex justify-center sm:justify-end mt-4 sm:mt-6">
                       <button
                         type="submit"
-                        className={`btn bg-npc-gold hover:bg-npc-darkGold text-white border-none${addressLoading ? 'loading' : ''}`}
+                        className={`btn btn-sm sm:btn-md bg-npc-gold hover:bg-npc-darkGold text-white border-none w-full sm:w-auto text-sm sm:text-base${addressLoading ? ' loading' : ''}`}
                         disabled={addressLoading}
                       >
                         {addressLoading ? 'Saving...' : 'Save Address'}
@@ -1202,110 +1202,119 @@ const Profile = () => {
               )}
               
               {activeTab === 'security' && (
-                <div className="space-y-8">
-                  <div className="bg-gray-50 p-6 rounded-lg border">
-                    <h3 className="text-lg font-medium text-gray-800">Change Password</h3>
-                    <form onSubmit={handlePasswordSubmit} className="space-y-4 mt-4">
-                      <div className="form-control">
-                        <label className="label">
-                          <span className="label-text text-gray-700">Current Password</span>
-                        </label>
-                        <input
-                          id="currentPassword"
-                          name="currentPassword"
-                          type="password"
-                          value={passwordForm.currentPassword}
-                          onChange={handlePasswordChange}
-                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.currentPassword ? 'input-error' : ''}`}
-                        />
-                        {errors.currentPassword && (
-                          <label className="label">
-                            <span className="label-text-alt text-error">{errors.currentPassword}</span>
-                          </label>
-                        )}
-                      </div>
+                <div className="space-y-6 sm:space-y-8">
+                  <form onSubmit={handlePasswordSubmit}>
+                    <div className="space-y-4 sm:space-y-6">
+                      <h3 className="text-base sm:text-lg font-medium text-gray-800">Change Password</h3>
+                      <p className="text-xs sm:text-sm text-gray-500">
+                        Update your password to keep your account secure. Make sure to use a strong password.
+                      </p>
                       
-                      <div className="form-control">
-                        <label className="label">
-                          <span className="label-text text-gray-700">New Password</span>
-                        </label>
-                        <input
-                          id="newPassword"
-                          name="newPassword"
-                          type="password"
-                          value={passwordForm.newPassword}
-                          onChange={handlePasswordChange}
-                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.newPassword ? 'input-error' : ''}`}
-                        />
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div className="form-control md:col-span-2">
+                          <label className="label">
+                            <span className="label-text text-sm sm:text-base text-gray-700">Current Password</span>
+                          </label>
+                          <input
+                            id="currentPassword"
+                            name="currentPassword"
+                            type="password"
+                            value={passwordForm.currentPassword}
+                            onChange={handlePasswordChange}
+                            className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.currentPassword ? 'input-error' : ''}`}
+                            placeholder="Enter your current password"
+                          />
+                          {errors.currentPassword && (
+                            <label className="label">
+                              <span className="label-text-alt text-error text-xs">{errors.currentPassword}</span>
+                            </label>
+                          )}
+                        </div>
                         
-                        {passwordForm.newPassword && (
-                          <div className="mt-2">
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div 
-                                className={`${passwordStrength.color} h-2 rounded-full`} 
-                                style={{ width: passwordStrength.width }}
-                              ></div>
+                        <div className="form-control">
+                          <label className="label">
+                            <span className="label-text text-sm sm:text-base text-gray-700">New Password</span>
+                          </label>
+                          <input
+                            id="newPassword"
+                            name="newPassword"
+                            type="password"
+                            value={passwordForm.newPassword}
+                            onChange={handlePasswordChange}
+                            className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.newPassword ? 'input-error' : ''}`}
+                            placeholder="Enter your new password"
+                          />
+                          
+                          {passwordForm.newPassword && (
+                            <div className="mt-2">
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div 
+                                  className={`${passwordStrength.color} h-2 rounded-full`} 
+                                  style={{ width: passwordStrength.width }}
+                                ></div>
+                              </div>
+                              <div className="flex justify-between text-xs mt-1">
+                                <span className="text-gray-500">Strength:</span>
+                                <span className={`
+                                  ${passwordStrength.label === 'Weak' ? 'text-red-500' : ''}
+                                  ${passwordStrength.label === 'Medium' ? 'text-yellow-500' : ''}
+                                  ${passwordStrength.label === 'Strong' ? 'text-green-500' : ''}
+                                `}>
+                                  {passwordStrength.label}
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex justify-between text-xs mt-1">
-                              <span className="text-gray-500">Strength:</span>
-                              <span className={`
-                                ${passwordStrength.label === 'Weak' ? 'text-red-500' : ''}
-                                ${passwordStrength.label === 'Medium' ? 'text-yellow-500' : ''}
-                                ${passwordStrength.label === 'Strong' ? 'text-green-500' : ''}
-                              `}>
-                                {passwordStrength.label}
-                              </span>
-                            </div>
-                          </div>
-                        )}
+                          )}
+                          
+                          {errors.newPassword && (
+                            <label className="label">
+                              <span className="label-text-alt text-error text-xs">{errors.newPassword}</span>
+                            </label>
+                          )}
+                        </div>
                         
-                        {errors.newPassword && (
+                        <div className="form-control">
                           <label className="label">
-                            <span className="label-text-alt text-error">{errors.newPassword}</span>
+                            <span className="label-text text-sm sm:text-base text-gray-700">Confirm New Password</span>
                           </label>
-                        )}
+                          <input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            value={passwordForm.confirmPassword}
+                            onChange={handlePasswordChange}
+                            className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold text-sm sm:text-base ${errors.confirmPassword ? 'input-error' : ''}`}
+                            placeholder="Confirm your new password"
+                          />
+                          {errors.confirmPassword && (
+                            <label className="label">
+                              <span className="label-text-alt text-error text-xs">{errors.confirmPassword}</span>
+                            </label>
+                          )}
+                        </div>
                       </div>
                       
-                      <div className="form-control">
-                        <label className="label">
-                          <span className="label-text text-gray-700">Confirm New Password</span>
-                        </label>
-                        <input
-                          id="confirmPassword"
-                          name="confirmPassword"
-                          type="password"
-                          value={passwordForm.confirmPassword}
-                          onChange={handlePasswordChange}
-                          className={`input input-bordered w-full bg-white text-gray-800 border-gray-300 focus:border-npc-gold focus:ring-npc-gold ${errors.confirmPassword ? 'input-error' : ''}`}
-                        />
-                        {errors.confirmPassword && (
-                          <label className="label">
-                            <span className="label-text-alt text-error">{errors.confirmPassword}</span>
-                          </label>
-                        )}
-                      </div>
-                      
-                      <div className="flex justify-end mt-4">
+                      <div className="flex justify-center sm:justify-end mt-4 sm:mt-6">
                         <button
                           type="submit"
-                          className={`btn bg-npc-gold hover:bg-npc-darkGold text-white border-none ${isLoading ? 'loading' : ''}`}
+                          className={`btn btn-sm sm:btn-md bg-npc-gold hover:bg-npc-darkGold text-white border-none w-full sm:w-auto text-sm sm:text-base${isLoading ? ' loading' : ''}`}
                           disabled={isLoading}
                         >
                           {isLoading ? 'Updating...' : 'Update Password'}
                         </button>
                       </div>
-                    </form>
-                  </div>
+                    </div>
+                  </form>
                   
-                  <div className="bg-red-50 p-6 rounded-lg border border-red-200">
-                    <h3 className="text-lg font-medium text-red-700">Delete Account</h3>
-                    <p className="text-sm text-red-600 mb-4">
+                  <div className="bg-red-50 p-4 sm:p-6 rounded-lg border border-red-200">
+                    <h3 className="text-base sm:text-lg font-medium text-red-700">Delete Account</h3>
+                    <p className="text-xs sm:text-sm text-red-600 mb-3 sm:mb-4">
                       Once you delete your account, there is no going back. Please be certain.
                     </p>
                     <button
                       type="button"
                       onClick={handleDeleteAccount}
-                      className="btn btn-error btn-outline"
+                      className="btn btn-sm sm:btn-md btn-error btn-outline w-full sm:w-auto text-sm sm:text-base"
                     >
                       Delete My Account
                     </button>

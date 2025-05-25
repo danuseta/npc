@@ -36,7 +36,8 @@ const ProductManagement = () => {
         page: 1,
         limit: 100,
         search: searchQuery || undefined,
-        category: selectedCategory !== 'all' ? selectedCategory : undefined
+        category: selectedCategory !== 'all' ? selectedCategory : undefined,
+        includeInactive: true
       };
       
       const response = await productAPI.getAllProducts(params);
@@ -435,12 +436,13 @@ const ProductManagement = () => {
   const openDeleteConfirmation = (product) => {
     Swal.fire({
       title: 'Are you sure?',
-      text: `Do you want to delete "${product.name}"? This cannot be undone.`,
+      text: `Do you want to permanently delete "${product.name}" from the database? This action cannot be undone and will also delete all associated images.`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#F0A84E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#F0A84E',
+      confirmButtonText: 'Yes, delete permanently!',
+      cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
         handleDeleteProduct(product.id);
@@ -464,7 +466,7 @@ const ProductManagement = () => {
         Swal.fire({
           icon: 'success',
           title: 'Product Deleted',
-          text: 'The product has been deleted successfully.',
+          text: 'The product has been permanently deleted from the database.',
           timer: 2000,
           showConfirmButton: false,
           confirmButtonColor: '#F0A84E'
